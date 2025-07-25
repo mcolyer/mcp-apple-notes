@@ -90,9 +90,49 @@ The DXT branch includes production-ready enhancements:
 - **Apple Notes app** configured with iCloud account
 - **User permissions** for AppleScript to access Apple Notes (granted on first use)
 
+## Release Workflow
+
+### Automated Releases
+
+The project uses GitHub Actions for automated DXT extension releases:
+
+**Creating a Release:**
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+**Release Process:**
+1. TypeScript compilation and validation
+2. Server directory creation with bundled dependencies  
+3. DXT structure validation (manifest, dependencies, server loading)
+4. Extension packaging using `@anthropic/dxt` CLI
+5. GitHub release creation with comprehensive release notes
+6. Artifact upload for debugging (30-day retention)
+
+**Manual Release Trigger:**
+- Available via GitHub Actions workflow dispatch
+- Supports custom version tags
+- Same validation and packaging process
+
+### Continuous Integration
+
+**Test Workflow** (`.github/workflows/test.yml`):
+- Triggered on pushes and PRs to main/dxt-extension branches
+- Validates TypeScript build and server loading
+- Tests DXT structure when manifest exists
+- Ensures dependency bundling works correctly
+
+**Release Workflow** (`.github/workflows/release.yml`):
+- Triggered on version tags (`v*`) or manual dispatch
+- Comprehensive validation and packaging pipeline
+- Automated release notes generation
+- Support for prerelease versions (beta, alpha, rc)
+
 ## Testing and Validation
 
 - Server can be tested by loading built JavaScript files
 - Manifest validation through JSON parsing
 - AppleScript execution requires actual Apple Notes access
-- No automated test suite currently implemented
+- Automated CI testing for build and structure validation
+- No unit test suite currently implemented
