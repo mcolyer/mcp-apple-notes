@@ -12,6 +12,7 @@ export default defineConfig({
         "node_modules/",
         "build/",
         "server/",
+        "dxt-build/",
         "tests/",
         "**/*.d.ts",
         "**/*.config.*",

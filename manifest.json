@@ -2,7 +2,7 @@
   "dxt_version": "0.1",
   "name": "apple-notes",
   "display_name": "Apple Notes MCP Server",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "A DXT extension for interacting with Apple Notes through MCP. Create, search, and retrieve notes effortlessly using AI assistants.",
   "long_description": "The Apple Notes MCP Server enables seamless interaction with Apple Notes through the Model Context Protocol. This extension provides three core tools: create new notes with titles and content, search existing notes by title, and retrieve the full content of specific notes. Perfect for note-taking during meetings, brainstorming sessions, and organizing information directly from your AI assistant. Requires macOS with Apple Notes configured and iCloud integration.",
   "author": {

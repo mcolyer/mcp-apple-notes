@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.6] - 2025-01-25
+
+### Fixed
+- **Server Transport**: Resolved server transport closing issue by ensuring proper build process with path alias resolution
+- **Coverage Exclusions**: Added `dxt-build/` directory to test coverage exclusions to prevent build artifacts from affecting coverage metrics
+- **Build Process**: Documented requirement to use `pnpm run build` instead of `tsc` directly for proper TypeScript path alias resolution
+
 ## [2.0.5] - 2024-07-25
 
 ### Fixed
