@@ -63,7 +63,7 @@ jobs:
           echo "✅ DXT structure validation completed"
       
       - name: Install DXT CLI
-        run: npm install -g @anthropic/dxt
+        run: npm install -g @anthropic-ai/dxt
       
       - name: Create DXT package
         run: |

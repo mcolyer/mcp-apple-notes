@@ -156,7 +156,7 @@ git push origin v1.0.0
 1. TypeScript compilation and validation
 2. Server directory creation with bundled dependencies  
 3. DXT structure validation (manifest, dependencies, server loading)
-4. Extension packaging using `@anthropic/dxt` CLI
+4. Extension packaging using `@anthropic-ai/dxt` CLI
 5. GitHub release creation with comprehensive release notes
 6. Artifact upload for debugging (30-day retention)
 
