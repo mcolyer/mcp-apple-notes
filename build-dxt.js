@@ -44,11 +44,11 @@ try {
   // Copy built files to server directory
   console.log("📦 Copying built files...");
   execSync(`cp -r build/* ${DXT_BUILD_DIR}/server/`, { stdio: "inherit" });
-  
+
   // Copy dependencies
   console.log("📦 Bundling dependencies...");
   execSync(`cp -r node_modules ${DXT_BUILD_DIR}/server/`, { stdio: "inherit" });
-  
+
   // Create server package.json
   console.log("📦 Creating server package.json...");
   execSync(`cp package.json ${DXT_BUILD_DIR}/server/package.json`, { stdio: "inherit" });
