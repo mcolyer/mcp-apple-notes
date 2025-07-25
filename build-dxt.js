@@ -35,9 +35,23 @@ try {
   console.log("🔨 Building TypeScript source...");
   execSync("pnpm run build", { stdio: "inherit" });
 
-  // Copy server files
-  console.log("📦 Copying server files...");
-  execSync(`cp -r server/ ${DXT_BUILD_DIR}/server/`, { stdio: "inherit" });
+  // Create server directory structure
+  console.log("📦 Creating server directory...");
+  mkdirSync(join(DXT_BUILD_DIR, "server"), { recursive: true });
+  mkdirSync(join(DXT_BUILD_DIR, "server", "services"), { recursive: true });
+  mkdirSync(join(DXT_BUILD_DIR, "server", "utils"), { recursive: true });
+
+  // Copy built files to server directory
+  console.log("📦 Copying built files...");
+  execSync(`cp -r build/* ${DXT_BUILD_DIR}/server/`, { stdio: "inherit" });
+  
+  // Copy dependencies
+  console.log("📦 Bundling dependencies...");
+  execSync(`cp -r node_modules ${DXT_BUILD_DIR}/server/`, { stdio: "inherit" });
+  
+  // Create server package.json
+  console.log("📦 Creating server package.json...");
+  execSync(`cp package.json ${DXT_BUILD_DIR}/server/package.json`, { stdio: "inherit" });
 
   // Copy manifest
   console.log("📋 Copying manifest...");
