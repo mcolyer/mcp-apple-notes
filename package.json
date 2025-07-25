@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "start": "node --require tsconfig-paths/register build/index.js"
+    "start": "node build/index.js",
+    "build:dxt": "node build-dxt.js",
+    "test:server": "cd server && node index.js --help"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",

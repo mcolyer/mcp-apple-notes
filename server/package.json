@@ -1,0 +1,22 @@
+{
+  "name": "apple-notes-dxt-server",
+  "version": "1.0.0",
+  "description": "Apple Notes MCP Server for DXT",
+  "type": "module",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.4.1",
+    "zod": "^3.22.4"
+  },
+  "keywords": [
+    "mcp",
+    "apple-notes",
+    "dxt",
+    "claude"
+  ],
+  "author": "MCP Apple Notes Contributors",
+  "license": "MIT"
+}
