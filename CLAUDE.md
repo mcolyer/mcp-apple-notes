@@ -32,11 +32,25 @@ All Apple Notes operations use AppleScript automation targeting the "iCloud" acc
 
 ## Development Commands
 
-### Building and Running
+### Package Management
+**IMPORTANT**: This project uses pnpm for package management. Always use pnpm to ensure lockfile consistency.
+
 ```bash
 # Install dependencies (preferred)
 pnpm install
 
+# Install with frozen lockfile (CI environments)
+pnpm install --frozen-lockfile
+```
+
+**Critical Notes:**
+- **Never use npm or yarn** - this will create conflicting lockfiles
+- **Always run `pnpm install`** after adding dependencies to package.json
+- **Commit pnpm-lock.yaml** whenever it changes to keep builds reproducible
+- **Use `--frozen-lockfile` in CI** to ensure exact dependency versions
+
+### Building and Running
+```bash
 # Build TypeScript to JavaScript
 pnpm exec tsc
 
@@ -45,6 +59,42 @@ node build/index.js
 
 # Build DXT extension package
 pnpm run build:dxt
+```
+
+### Testing
+```bash
+# Run all tests
+pnpm test
+
+# Run tests once (CI mode)
+pnpm run test:run
+
+# Run tests with coverage report
+pnpm run test:coverage
+
+# Run only unit tests
+pnpm run test:unit
+
+# Run only integration tests
+pnpm run test:integration
+
+# Run tests in watch mode (for development)
+pnpm run test:watch
+```
+
+### Code Quality
+```bash
+# Run linting
+pnpm run lint
+
+# Fix linting issues
+pnpm run lint:fix
+
+# Format code
+pnpm run format
+
+# Run all checks
+pnpm run check
 ```
 
 ### TypeScript Configuration
@@ -131,8 +181,40 @@ git push origin v1.0.0
 
 ## Testing and Validation
 
-- Server can be tested by loading built JavaScript files
-- Manifest validation through JSON parsing
-- AppleScript execution requires actual Apple Notes access
-- Automated CI testing for build and structure validation
-- No unit test suite currently implemented
+### Test Suite
+The project includes a comprehensive test suite with 61 tests achieving 100% line coverage:
+
+**Unit Tests** (`tests/unit/`):
+- AppleScript utility functions with execution mocking
+- AppleNotesManager class with comprehensive error scenarios
+- Date mocking and input validation testing
+
+**Integration Tests** (`tests/integration/`):
+- MCP tool handlers end-to-end testing
+- Error handling and response validation
+- Parameter validation and edge cases
+
+**Test Infrastructure**:
+- Vitest framework with TypeScript support
+- Comprehensive mocking utilities and fixtures
+- Cross-platform compatibility (macOS and CI environments)
+- Coverage reporting with quality thresholds (85% lines, 90% functions)
+
+### Quality Gates
+All changes must pass:
+- Full test suite execution
+- Linting with Biome
+- TypeScript compilation
+- Coverage thresholds
+- GitHub Actions CI validation
+
+### File Structure
+- `tests/setup.ts`: Global test configuration and mocks
+- `tests/helpers/`: Shared testing utilities and mock factories
+- `tests/fixtures/`: Sample data and mock responses
+- Server files in `server/` are build artifacts and excluded from git
+
+### Important Notes
+- Always run `pnpm install` after adding dependencies to update lockfile
+- Tests mock AppleScript execution for cross-platform compatibility
+- CI environments use `--frozen-lockfile` for reproducible builds
