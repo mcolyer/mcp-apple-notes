@@ -1,0 +1,54 @@
+name: Lint and Format
+
+on:
+  push:
+    branches: [ main, dxt-extension ]
+  pull_request:
+    branches: [ main, dxt-extension ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run Biome linting
+        run: pnpm run lint
+      
+      - name: Check formatting
+        run: |
+          pnpm run format
+          if ! git diff --exit-code; then
+            echo "❌ Code formatting issues found. Run 'pnpm run format' to fix."
+            exit 1
+          fi
+          echo "✅ Code formatting is correct"
+      
+      - name: Run full Biome check
+        run: pnpm run check
+      
+      - name: TypeScript compilation check
+        run: pnpm exec tsc --noEmit
+      
+      - name: Lint summary
+        run: |
+          echo "🎉 All linting checks passed!"
+          echo "✅ Biome linting: OK"
+          echo "✅ Code formatting: OK" 
+          echo "✅ TypeScript compilation: OK"

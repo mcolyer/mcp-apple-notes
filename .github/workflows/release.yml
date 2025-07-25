@@ -38,6 +38,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
+      - name: Run linting and formatting check
+        run: |
+          pnpm run check
+          echo "✅ Linting and formatting validated"
+      
       - name: Build TypeScript
         run: pnpm exec tsc
       
