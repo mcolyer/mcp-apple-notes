@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.3] - 2024-07-25
+
+### Fixed
+- **DXT CLI Installation**: Correct package name from `@anthropic/dxt` to `@anthropic-ai/dxt`
+- **Release Workflow**: Fix 404 error during DXT CLI installation in GitHub Actions
+- **Documentation**: Update references to use correct npm package name
+
 ## [2.0.2] - 2024-07-25
 
 ### Fixed
