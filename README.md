@@ -221,19 +221,19 @@ This project includes comprehensive tests to ensure reliability and maintainabil
 pnpm test
 
 # Run tests once (CI mode)
-npm run test:run
+pnpm run test:run
 
 # Run tests with coverage report
-npm run test:coverage
+pnpm run test:coverage
 
 # Run only unit tests
-npm run test:unit
+pnpm run test:unit
 
 # Run only integration tests
-npm run test:integration
+pnpm run test:integration
 
 # Run tests in watch mode (for development)
-npm run test:watch
+pnpm run test:watch
 ```
 
 #### Test Structure
