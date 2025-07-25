@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
+      - name: Run linting
+        run: pnpm run lint
+      
       - name: Run tests
         run: |
           pnpm run test:run
@@ -91,10 +94,10 @@ jobs:
             # Use the actual build:dxt script to create proper server structure
             pnpm run build:dxt
             
-            # Validate DXT structure
-            test -f server/index.js || { echo "❌ server/index.js missing"; exit 1; }
-            test -f server/package.json || { echo "❌ server/package.json missing"; exit 1; }
-            test -d server/node_modules/@modelcontextprotocol || { echo "❌ MCP SDK missing"; exit 1; }
+            # Validate DXT structure (files are in dxt-build directory)
+            test -f dxt-build/server/index.js || { echo "❌ dxt-build/server/index.js missing"; exit 1; }
+            test -f dxt-build/server/package.json || { echo "❌ dxt-build/server/package.json missing"; exit 1; }
+            test -d dxt-build/server/node_modules/@modelcontextprotocol || { echo "❌ MCP SDK missing"; exit 1; }
             
             echo "✅ DXT build test passed"
           else
