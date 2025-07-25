@@ -8,7 +8,7 @@ import type { CreateNoteParams, GetNoteParams, SearchParams } from "@/types.js";
 
 export const createNote = async (request: { name: string; arguments: CreateNoteParams }) => {
   const { title, content, tags = [] } = request.arguments;
-  
+
   if (!title || typeof title !== "string") {
     return {
       content: [
@@ -36,7 +36,7 @@ export const createNote = async (request: { name: string; arguments: CreateNoteP
   try {
     const notesManager = new AppleNotesManager();
     const note = notesManager.createNote(title, content, Array.isArray(tags) ? tags : []);
-    
+
     if (!note) {
       return {
         content: [
@@ -72,7 +72,7 @@ export const createNote = async (request: { name: string; arguments: CreateNoteP
 
 export const searchNotes = async (request: { name: string; arguments: SearchParams }) => {
   const { query } = request.arguments;
-  
+
   if (!query || typeof query !== "string") {
     return {
       content: [
@@ -88,7 +88,7 @@ export const searchNotes = async (request: { name: string; arguments: SearchPara
   try {
     const notesManager = new AppleNotesManager();
     const notes = notesManager.searchNotes(query);
-    
+
     if (notes.length === 0) {
       return {
         content: [
@@ -100,10 +100,12 @@ export const searchNotes = async (request: { name: string; arguments: SearchPara
       };
     }
 
-    const notesList = notes.map((note, index) => {
-      const tagsText = note.tags.length > 0 ? note.tags.join(", ") : "(none)";
-      return `${index + 1}. ${note.title} (ID: ${note.id})\n   Tags: ${tagsText}\n   Created: ${note.created.toISOString()}`;
-    }).join("\n\n");
+    const notesList = notes
+      .map((note, index) => {
+        const tagsText = note.tags.length > 0 ? note.tags.join(", ") : "(none)";
+        return `${index + 1}. ${note.title} (ID: ${note.id})\n   Tags: ${tagsText}\n   Created: ${note.created.toISOString()}`;
+      })
+      .join("\n\n");
 
     return {
       content: [
@@ -128,7 +130,7 @@ export const searchNotes = async (request: { name: string; arguments: SearchPara
 
 export const getNoteContent = async (request: { name: string; arguments: GetNoteParams }) => {
   const { title } = request.arguments;
-  
+
   if (!title || typeof title !== "string") {
     return {
       content: [
@@ -144,9 +146,9 @@ export const getNoteContent = async (request: { name: string; arguments: GetNote
   try {
     const notesManager = new AppleNotesManager();
     const content = notesManager.getNoteContent(title);
-    
+
     const displayContent = content.trim() === "" ? "(Note is empty)" : content;
-    
+
     return {
       content: [
         {

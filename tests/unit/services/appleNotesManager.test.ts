@@ -1,12 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AppleNotesManager } from "@/services/appleNotesManager.js";
 import * as appleScriptModule from "@/utils/applescript.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  mockSuccessResult,
-  mockFailureResult,
-  mockSearchResults,
   mockEmptySearchResults,
+  mockFailureResult,
   mockNoteContent,
+  mockSearchResults,
+  mockSuccessResult,
 } from "../../fixtures/mockAppleScriptResults.js";
 import { createMockNote, mockDateNow, restoreDateNow } from "../../helpers/testHelpers.js";
 
@@ -44,7 +44,7 @@ describe("AppleNotesManager", () => {
     it("should format content for AppleScript", () => {
       mockRunAppleScript.mockReturnValue(mockSuccessResult);
 
-      manager.createNote("Test", "Line 1\nLine 2\tTab\n\"Quotes\"");
+      manager.createNote("Test", 'Line 1\nLine 2\tTab\n"Quotes"');
 
       const expectedScript = expect.stringContaining(
         'body:"Line 1<br>Line 2<br>Tab<br>\\"Quotes\\""'
@@ -58,9 +58,7 @@ describe("AppleNotesManager", () => {
       const result = manager.createNote("Test", "");
 
       expect(result).not.toBeNull();
-      expect(mockRunAppleScript).toHaveBeenCalledWith(
-        expect.stringContaining('body:""')
-      );
+      expect(mockRunAppleScript).toHaveBeenCalledWith(expect.stringContaining('body:""'));
     });
 
     it("should handle empty tags array", () => {
@@ -337,7 +335,7 @@ describe("AppleNotesManager", () => {
       manager.getNoteContent("Note");
 
       expect(mockRunAppleScript).toHaveBeenCalledTimes(3);
-      
+
       // Check that all calls include the iCloud account reference
       for (const call of mockRunAppleScript.mock.calls) {
         expect(call[0]).toContain('tell account "iCloud"');

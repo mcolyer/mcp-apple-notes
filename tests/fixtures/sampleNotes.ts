@@ -10,7 +10,7 @@ export const sampleNote1: Note = {
 };
 
 export const sampleNote2: Note = {
-  id: "2", 
+  id: "2",
   title: "Shopping List",
   content: "Milk\nBread\nEggs\nButter",
   tags: ["personal", "shopping"],
@@ -21,7 +21,8 @@ export const sampleNote2: Note = {
 export const sampleNote3: Note = {
   id: "3",
   title: "Project Ideas",
-  content: "1. Build a note-taking app\n2. Create a task manager\n3. Develop a calendar integration",
+  content:
+    "1. Build a note-taking app\n2. Create a task manager\n3. Develop a calendar integration",
   tags: ["ideas", "projects", "development"],
   created: new Date("2024-01-17T14:00:00Z"),
   modified: new Date("2024-01-17T14:45:00Z"),
@@ -30,7 +31,8 @@ export const sampleNote3: Note = {
 export const noteWithSpecialCharacters: Note = {
   id: "4",
   title: 'Note with "quotes" & special chars',
-  content: 'This note contains:\n- "Double quotes"\n- \'Single quotes\'\n- Newlines\n- Tabs\t\there',
+  content:
+    "This note contains:\n- \"Double quotes\"\n- 'Single quotes'\n- Newlines\n- Tabs\t\there",
   tags: ["test", "special-chars"],
   created: new Date("2024-01-18T12:00:00Z"),
   modified: new Date("2024-01-18T12:05:00Z"),

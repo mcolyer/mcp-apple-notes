@@ -1,15 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createNote, searchNotes, getNoteContent } from "@/tools/handlers.js";
 import { AppleNotesManager } from "@/services/appleNotesManager.js";
-import { createMockParams, createMockNote, validateToolResponse } from "../helpers/testHelpers.js";
-import { sampleNote1, sampleNote2, sampleNote3, allSampleNotes } from "../fixtures/sampleNotes.js";
+import { createNote, getNoteContent, searchNotes } from "@/tools/handlers.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { allSampleNotes, sampleNote1, sampleNote2, sampleNote3 } from "../fixtures/sampleNotes.js";
+import { createMockNote, createMockParams, validateToolResponse } from "../helpers/testHelpers.js";
 
 // Mock the AppleNotesManager
 vi.mock("@/services/appleNotesManager.js");
 const MockAppleNotesManager = vi.mocked(AppleNotesManager);
 
 describe("MCP Tools Integration", () => {
-  let mockManager: any;
+  let mockManager: {
+    createNote: ReturnType<typeof vi.fn>;
+    searchNotes: ReturnType<typeof vi.fn>;
+    getNoteContent: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,11 +42,10 @@ describe("MCP Tools Integration", () => {
 
       const result = await createNote({ name: "create-note", arguments: params });
 
-      expect(mockManager.createNote).toHaveBeenCalledWith(
-        "New Note",
-        "New content",
-        ["test", "integration"]
-      );
+      expect(mockManager.createNote).toHaveBeenCalledWith("New Note", "New content", [
+        "test",
+        "integration",
+      ]);
 
       validateToolResponse(result);
       expect(result.content[0].text).toContain("Created note successfully");
@@ -203,7 +206,8 @@ describe("MCP Tools Integration", () => {
 
   describe("getNoteContent tool", () => {
     it("should get note content successfully", async () => {
-      const expectedContent = "This is the full content of the note with multiple lines.\n\nSecond paragraph here.";
+      const expectedContent =
+        "This is the full content of the note with multiple lines.\n\nSecond paragraph here.";
       mockManager.getNoteContent.mockReturnValue(expectedContent);
 
       const params = createMockParams.getNoteContent({ title: "My Note" });
@@ -363,8 +367,12 @@ End of note.`;
       const mockNote = createMockNote();
       mockManager.createNote.mockReturnValue(mockNote);
 
-      const invalidParams = { title: "Valid Title", content: "Valid content", tags: "not-an-array" };
-      const result = await createNote({ name: "create-note", arguments: invalidParams });
+      const invalidParams = {
+        title: "Valid Title",
+        content: "Valid content",
+        tags: "not-an-array",
+      };
+      await createNote({ name: "create-note", arguments: invalidParams });
 
       // Should still work but treat tags as empty array
       expect(mockManager.createNote).toHaveBeenCalledWith("Valid Title", "Valid content", []);
@@ -386,7 +394,7 @@ End of note.`;
 
       for (const { tool, params } of tools) {
         const result = await tool({ name: "tool-name", arguments: params });
-        
+
         validateToolResponse(result);
         expect(typeof result.content[0].text).toBe("string");
         expect(result.content[0].text.length).toBeGreaterThan(0);

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { execSync } from "node:child_process";
-import { runAppleScript } from "@/utils/applescript.js";
 import type { AppleScriptResult } from "@/types.js";
+import { runAppleScript } from "@/utils/applescript.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock execSync
 vi.mock("node:child_process");
@@ -36,7 +36,9 @@ describe("runAppleScript", () => {
       runAppleScript(script);
 
       expect(mockExecSync).toHaveBeenCalledWith(
-        expect.stringContaining(`osascript -e 'tell application "Notes"         to make new note         with properties {name:"test"}'`),
+        expect.stringContaining(
+          `osascript -e 'tell application "Notes"         to make new note         with properties {name:"test"}'`
+        ),
         {
           encoding: "utf8",
           timeout: 10000,
@@ -122,10 +124,7 @@ describe("runAppleScript", () => {
 
       runAppleScript("test script");
 
-      expect(global.consoleMock.error).toHaveBeenCalledWith(
-        "AppleScript execution failed:",
-        error
-      );
+      expect(global.consoleMock.error).toHaveBeenCalledWith("AppleScript execution failed:", error);
     });
   });
 
@@ -135,13 +134,10 @@ describe("runAppleScript", () => {
 
       runAppleScript("test script");
 
-      expect(mockExecSync).toHaveBeenCalledWith(
-        expect.any(String),
-        {
-          encoding: "utf8",
-          timeout: 10000,
-        }
-      );
+      expect(mockExecSync).toHaveBeenCalledWith(expect.any(String), {
+        encoding: "utf8",
+        timeout: 10000,
+      });
     });
 
     it("should construct proper osascript command", () => {
@@ -150,10 +146,7 @@ describe("runAppleScript", () => {
 
       runAppleScript(script);
 
-      expect(mockExecSync).toHaveBeenCalledWith(
-        `osascript -e '${script}'`,
-        expect.any(Object)
-      );
+      expect(mockExecSync).toHaveBeenCalledWith(`osascript -e '${script}'`, expect.any(Object));
     });
   });
 
@@ -174,10 +167,7 @@ describe("runAppleScript", () => {
 
       runAppleScript("line1\n\n\nline2");
 
-      expect(mockExecSync).toHaveBeenCalledWith(
-        "osascript -e 'line1 line2'",
-        expect.any(Object)
-      );
+      expect(mockExecSync).toHaveBeenCalledWith("osascript -e 'line1 line2'", expect.any(Object));
     });
 
     it("should preserve single quotes in script", () => {
@@ -186,10 +176,7 @@ describe("runAppleScript", () => {
 
       runAppleScript(script);
 
-      expect(mockExecSync).toHaveBeenCalledWith(
-        `osascript -e '${script}'`,
-        expect.any(Object)
-      );
+      expect(mockExecSync).toHaveBeenCalledWith(`osascript -e '${script}'`, expect.any(Object));
     });
   });
 

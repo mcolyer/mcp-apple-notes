@@ -1,13 +1,13 @@
-import { vi } from "vitest";
 import type { AppleScriptResult } from "@/types.js";
+import { vi } from "vitest";
 import {
-  mockSuccessResult,
-  mockFailureResult,
-  mockSearchResults,
   mockEmptySearchResults,
+  mockFailureResult,
   mockNoteContent,
-  mockTimeoutError,
   mockPermissionError,
+  mockSearchResults,
+  mockSuccessResult,
+  mockTimeoutError,
 } from "../fixtures/mockAppleScriptResults.js";
 
 /**
@@ -15,27 +15,27 @@ import {
  */
 export const createMockAppleScript = () => {
   const mockExecSync = vi.fn();
-  
+
   return {
     mockExecSync,
-    
+
     /**
      * Configure mock to return success for any script
      */
-    mockSuccess: (output: string = "success") => {
+    mockSuccess: (output = "success") => {
       mockExecSync.mockReturnValue(output);
     },
-    
+
     /**
      * Configure mock to throw an error (simulating AppleScript failure)
      */
-    mockFailure: (errorMessage: string = "AppleScript failed") => {
+    mockFailure: (errorMessage = "AppleScript failed") => {
       const error = new Error(errorMessage);
       mockExecSync.mockImplementation(() => {
         throw error;
       });
     },
-    
+
     /**
      * Configure mock to timeout
      */
@@ -46,7 +46,7 @@ export const createMockAppleScript = () => {
         throw error;
       });
     },
-    
+
     /**
      * Configure mock based on script content
      */
@@ -63,7 +63,7 @@ export const createMockAppleScript = () => {
         return "default response";
       });
     },
-    
+
     /**
      * Reset all mocks
      */
