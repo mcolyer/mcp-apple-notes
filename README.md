@@ -2,6 +2,8 @@
 
 **Apple Notes MCP Server** is a Model Context Protocol server that enables seamless interaction with Apple Notes through natural language. Create, search, and retrieve notes effortlessly using Claude or other AI assistants! 🎉
 
+Available as both a **Desktop Extension (DXT)** for single-click installation and a traditional MCP server for manual configuration.
+
 <a href="https://glama.ai/mcp/servers/ayr26szokg">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/ayr26szokg/badge" alt="Apple Notes Server MCP server" />
 </a>
@@ -12,48 +14,61 @@
 - **Search Notes:** Find notes using powerful search capabilities 🔍
 - **Retrieve Content:** Get the full content of any note by its title 📖
 - **iCloud Integration:** Works directly with your iCloud Notes account ☁️
+- **Production Security:** Enhanced input validation and timeout protection
+- **Single-Click Install:** Available as Desktop Extension (DXT) for compatible AI apps
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-1. macOS with Apple Notes app configured
-2. Node.js (version 20.0.0 or higher)
-3. Yarn package manager
+- **macOS** with Apple Notes app configured
+- **Node.js** 20.0.0 or higher
+- Compatible AI desktop application supporting DXT or MCP
 
-### Installation
+## 📦 Installation Methods
+
+### Option 1: Desktop Extension (DXT) - Recommended
+
+**Single-click installation** for compatible AI desktop applications:
+
+1. Download the `.dxt` extension file from releases
+2. Install through your AI desktop application's extension manager
+3. The extension will be automatically configured and ready to use
+
+**Benefits:**
+- ✅ One-click installation
+- ✅ Enhanced security and validation
+- ✅ Automatic dependency management
+- ✅ Production-ready configuration
+- ✅ Structured logging and monitoring
+
+### Option 2: Traditional MCP Server
+
+**Manual configuration** for custom setups:
 
 1. Clone the repository:
-
    ```bash
-   git clone https://github.com/Siddhant-K-code/mcp-apple-notes.git
+   git clone https://github.com/mcolyer/mcp-apple-notes.git
    cd mcp-apple-notes
    ```
 
 2. Install dependencies:
-
    ```bash
-   yarn install
+   pnpm install
    ```
 
 3. Build the project:
-
    ```bash
-   yarn build
+   pnpm exec tsc
    ```
 
-4. Start the server:
-   ```bash
-   yarn start
-   ```
-
-5. Configure Claude Desktop. Update your `claude_desktop_config.json` with:
+4. Configure Claude Desktop by updating your `claude_desktop_config.json`:
    ```json
    {
      "mcpServers": {
        "apple-notes": {
-         "command": "yarn",
-         "args": ["start"],
+         "command": "node",
+         "args": ["build/index.js"],
          "cwd": "/path/to/mcp-apple-notes"
        }
      }
@@ -61,16 +76,10 @@
    ```
 
    > **Note:** Replace `/path/to/mcp-apple-notes` with the actual path to your cloned repository.
-   > You may need to authorize the script to access Apple Notes when first running commands.
 
-### MCP Server Initialization
+### First-Time Setup
 
-When the server starts successfully, you'll see:
-```
-Starting Apple Notes MCP server.
-```
-
-The server is now ready to handle your note operations! 🎉
+You may need to authorize the extension to access Apple Notes when first running commands. macOS will prompt you to grant permission for AppleScript automation.
 
 ## 🛠️ Usage
 
@@ -163,19 +172,89 @@ Get the full content of a specific note:
 
 ## 🔧 Development
 
-The project uses TypeScript and follows modern ES modules patterns. Key files:
+### Architecture Overview
 
-- `src/index.ts`: Main server implementation
-- `src/services/appleNotesManager.ts`: Core note management functionality
-- `src/utils/applescript.ts`: AppleScript integration utilities
+The project uses TypeScript with modern ES modules and supports dual distribution:
 
-### Development Container
+- **Traditional MCP Server**: Built JavaScript files in `build/` directory
+- **Desktop Extension (DXT)**: Self-contained package in `server/` directory with enhanced security
 
-A development container configuration is provided for VS Code users, offering:
+### Key Components
 
-- TypeScript Node.js environment
-- Prettier for code formatting
-- Automatic dependency installation
+- `src/index.ts`: Main MCP server implementation with tool registration
+- `src/services/appleNotesManager.ts`: Apple Notes operations via AppleScript
+- `src/utils/applescript.ts`: Secure AppleScript execution with timeout handling
+- `src/types.ts`: TypeScript interfaces and type definitions
+
+### Development Setup
+
+1. **Clone and install dependencies:**
+   ```bash
+   git clone https://github.com/mcolyer/mcp-apple-notes.git
+   cd mcp-apple-notes
+   pnpm install
+   ```
+
+2. **Build TypeScript:**
+   ```bash
+   pnpm exec tsc
+   ```
+
+3. **Test the server:**
+   ```bash
+   node build/index.js
+   ```
+
+### Building Desktop Extension (DXT)
+
+The DXT branch contains production-ready enhancements with security validation, structured logging, and bundled dependencies.
+
+1. **Switch to DXT branch:**
+   ```bash
+   git checkout dxt-extension
+   ```
+
+2. **Build the extension:**
+   ```bash
+   # Build TypeScript source
+   pnpm exec tsc
+   
+   # Create server directory with bundled dependencies
+   mkdir -p server
+   cp -r build/* server/
+   cp -r node_modules server/
+   ```
+
+3. **Automated build script:**
+   ```bash
+   pnpm run build:dxt
+   ```
+
+4. **Package as DXT (requires dxt CLI tool):**
+   ```bash
+   dxt pack .
+   ```
+
+### Key Development Files
+
+- `manifest.json`: DXT extension manifest following v0.1 specification
+- `server/`: Complete DXT package with bundled dependencies
+- `build-dxt.js`: Automated build script for creating DXT packages
+- `DXT_README.md`: Production deployment documentation
+- `CLAUDE.md`: Development guide for Claude Code instances
+
+### Security Considerations
+
+- All AppleScript inputs are sanitized to prevent injection attacks
+- Quote characters are escaped for safe script execution
+- DXT version includes input length limits and timeout management
+- Comprehensive error handling prevents system exposure
+
+### Testing
+
+- Manual testing requires Apple Notes app access on macOS
+- Server validation through manifest parsing and dependency loading
+- No automated test suite currently implemented
 
 ## 📄 License
 
