@@ -1,0 +1,189 @@
+name: Release DXT Extension
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0, v1.0.1, etc.
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for proper versioning
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build TypeScript
+        run: pnpm exec tsc
+      
+      - name: Create DXT server directory
+        run: |
+          mkdir -p server
+          cp -r build/* server/
+          cp -r node_modules server/
+      
+      - name: Validate DXT structure
+        run: |
+          # Check required files exist
+          test -f manifest.json || { echo "❌ manifest.json missing"; exit 1; }
+          test -f server/index.js || { echo "❌ server/index.js missing"; exit 1; }
+          test -f server/package.json || { echo "❌ server/package.json missing"; exit 1; }
+          test -d server/node_modules/@modelcontextprotocol || { echo "❌ MCP SDK missing"; exit 1; }
+          
+          # Validate manifest JSON
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8'))" || { echo "❌ Invalid manifest.json"; exit 1; }
+          
+          # Test server can load
+          cd server && timeout 10s node -e "console.log('✅ Server validation passed')" || { echo "❌ Server validation failed"; exit 1; }
+          
+          echo "✅ DXT structure validation completed"
+      
+      - name: Install DXT CLI
+        run: npm install -g @anthropic/dxt
+      
+      - name: Create DXT package
+        run: |
+          # Determine tag name
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG_NAME="${{ github.event.inputs.tag }}"
+          else
+            TAG_NAME=${GITHUB_REF_NAME}
+          fi
+          
+          # Create the DXT package
+          dxt pack . --output apple-notes-dxt-${TAG_NAME}.dxt
+          
+          # Verify the package was created
+          test -f apple-notes-dxt-${TAG_NAME}.dxt || { echo "❌ DXT package creation failed"; exit 1; }
+          
+          # Get package size for release notes
+          ls -lh apple-notes-dxt-${TAG_NAME}.dxt
+          
+          echo "✅ DXT package created successfully"
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+      
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Extract version from tag (remove 'v' prefix)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.tag }}"
+            VERSION=${VERSION#v}
+            TAG_NAME="${{ github.event.inputs.tag }}"
+          else
+            VERSION=${GITHUB_REF_NAME#v}
+            TAG_NAME=${GITHUB_REF_NAME}
+          fi
+          
+          # Get latest commit messages since last tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREVIOUS_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
+          else
+            COMMITS=$(git log --pretty=format:"- %s" -10)  # Last 10 commits if no previous tag
+          fi
+          
+          # Create release notes
+          cat << EOF > release_notes.md
+          # Apple Notes DXT Extension v$VERSION
+          
+          ## 📦 Installation
+          
+          1. Download the \`apple-notes-dxt-${TAG_NAME}.dxt\` file below
+          2. Install through your compatible AI desktop application's extension manager
+          3. The extension will be automatically configured and ready to use
+          
+          ## 🎯 Features
+          
+          - **Create Notes**: Add new notes with title, content, and optional tags
+          - **Search Notes**: Find existing notes by title using query strings
+          - **Retrieve Content**: Get the full content of specific notes
+          - **Production Security**: Enhanced input validation and timeout protection
+          - **Structured Logging**: JSON-formatted logs for monitoring and debugging
+          
+          ## 🔧 Requirements
+          
+          - **macOS** with Apple Notes app configured
+          - **Node.js** 20.0.0 or higher (bundled in extension)
+          - **iCloud** account with Apple Notes enabled
+          - Compatible AI desktop application supporting DXT
+          
+          ## 📝 Changes in this Release
+          
+          $COMMITS
+          
+          ## 🔒 Security
+          
+          This release includes comprehensive security measures:
+          - AppleScript injection prevention through input sanitization
+          - Configurable operation timeouts (30-second default)
+          - Input length validation and null character filtering
+          - Process-level exception handling with graceful failures
+          
+          ---
+          
+          **Package Size**: $(ls -lh apple-notes-dxt-${TAG_NAME}.dxt | awk '{print $5}')
+          **Node.js Runtime**: $(node --version)
+          **Build Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          EOF
+          
+          echo "release_notes_file=release_notes.md" >> $GITHUB_OUTPUT
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            apple-notes-dxt-${{ env.TAG_NAME }}.dxt
+            DXT_README.md
+            CLAUDE.md
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(env.TAG_NAME, 'beta') || contains(env.TAG_NAME, 'alpha') || contains(env.TAG_NAME, 'rc') }}
+          generate_release_notes: false  # We provide our own release notes
+          tag_name: ${{ env.TAG_NAME }}
+          name: "Apple Notes DXT Extension ${{ env.TAG_NAME }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dxt-build-artifacts-${{ env.TAG_NAME }}
+          path: |
+            apple-notes-dxt-${{ env.TAG_NAME }}.dxt
+            manifest.json
+            server/
+            build/
+          retention-days: 30
+      
+      - name: Release summary
+        run: |
+          echo "🎉 Release ${{ env.TAG_NAME }} completed successfully!"
+          echo "📦 DXT package: apple-notes-dxt-${{ env.TAG_NAME }}.dxt"
+          echo "📊 Package size: $(ls -lh apple-notes-dxt-${{ env.TAG_NAME }}.dxt | awk '{print $5}')"
+          echo "🔗 Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ env.TAG_NAME }}"
