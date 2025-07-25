@@ -20,21 +20,31 @@ jobs:
           node-version: '20'
           cache: 'npm'
       
-      - name: Install pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
       
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install
       
       - name: Run linting
         run: |
-          pnpm run lint
+          npm run lint
           echo "✅ Linting passed"
       
+      - name: Run tests
+        run: |
+          npm run test:run
+          echo "✅ Tests passed"
+      
+      - name: Generate coverage report
+        run: |
+          npm run test:coverage
+          echo "✅ Coverage report generated"
+      
       - name: Build TypeScript
-        run: pnpm exec tsc
+        run: npm run build
       
       - name: Validate build output
         run: |

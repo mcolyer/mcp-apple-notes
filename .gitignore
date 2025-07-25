@@ -2,8 +2,8 @@ node_modules/
 build/
 .DS_Store
 
-# DXT server directory (bundled dependencies)
-server/node_modules/
+# DXT server directory (build artifacts and bundled dependencies)
+server/
 
 # DXT build artifacts
 *.dxt

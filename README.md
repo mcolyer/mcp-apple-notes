@@ -4,6 +4,8 @@
 
 Available as both a **Desktop Extension (DXT)** for single-click installation and a traditional MCP server for manual configuration.
 
+**🚀 [Download Latest DXT Release](https://github.com/mcolyer/mcp-apple-notes/releases/latest)** | **📚 [View All Releases](https://github.com/mcolyer/mcp-apple-notes/releases)**
+
 <a href="https://glama.ai/mcp/servers/ayr26szokg">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/ayr26szokg/badge" alt="Apple Notes Server MCP server" />
 </a>
@@ -31,9 +33,12 @@ Available as both a **Desktop Extension (DXT)** for single-click installation an
 
 **Single-click installation** for compatible AI desktop applications:
 
-1. Download the `.dxt` extension file from releases
-2. Install through your AI desktop application's extension manager
-3. The extension will be automatically configured and ready to use
+1. **Download the latest DXT release:**
+   - [📦 Download latest DXT](https://github.com/mcolyer/mcp-apple-notes/releases/latest) 
+   - Look for the `apple-notes.dxt` file in the release assets
+
+2. **Install through your AI desktop application's extension manager**
+3. **The extension will be automatically configured and ready to use**
 
 **Benefits:**
 - ✅ One-click installation
@@ -205,6 +210,65 @@ The project uses TypeScript with modern ES modules and supports dual distributio
    node build/index.js
    ```
 
+### Testing
+
+This project includes comprehensive tests to ensure reliability and maintainability:
+
+#### Running Tests
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests once (CI mode)
+npm run test:run
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run only unit tests
+npm run test:unit
+
+# Run only integration tests
+npm run test:integration
+
+# Run tests in watch mode (for development)
+npm run test:watch
+```
+
+#### Test Structure
+
+- **Unit Tests** (`tests/unit/`): Test individual components in isolation
+  - AppleScript utility functions (`tests/unit/utils/applescript.test.ts`)
+  - Apple Notes manager class (`tests/unit/services/appleNotesManager.test.ts`)
+
+- **Integration Tests** (`tests/integration/`): Test complete workflows
+  - MCP tool handlers (`tests/integration/mcp-tools.test.ts`)
+
+- **Test Helpers** (`tests/helpers/`): Shared utilities for testing
+  - Mock creation and validation helpers
+  - Date mocking utilities
+  - Test response validators
+
+#### Coverage Requirements
+
+- **Lines**: 85% minimum
+- **Functions**: 90% minimum  
+- **Branches**: 80% minimum
+- **Statements**: 85% minimum
+
+Current coverage typically exceeds these thresholds with 100% line coverage on core business logic.
+
+#### Testing Environment
+
+Tests are designed to work in both macOS and CI environments:
+
+- **macOS**: Full integration testing with actual AppleScript mocking
+- **CI/Linux**: Unit tests run with comprehensive mocking of macOS-specific features
+- **GitHub Actions**: Automated testing on multiple Node.js versions (18, 20, 22)
+
+The test suite uses [Vitest](https://vitest.dev) for fast, modern testing with TypeScript support.
+
 ### Building Desktop Extension (DXT)
 
 The DXT branch contains production-ready enhancements with security validation, structured logging, and bundled dependencies.
@@ -227,7 +291,7 @@ The DXT branch contains production-ready enhancements with security validation, 
 
 3. **Automated build script:**
    ```bash
-   pnpm run build:dxt
+   pnpm exec tsc:dxt
    ```
 
 4. **Package as DXT (requires dxt CLI tool):**
