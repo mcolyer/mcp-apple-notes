@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.5] - 2024-07-25
+
+### Fixed
+- **Manifest Schema**: Correct tool definitions in manifest.json for DXT CLI validation
+- **DXT Packaging**: Remove detailed parameter schemas that caused validation errors
+- **Local Testing**: Verified successful DXT package creation (103MB output)
+
+## [2.0.4] - 2024-07-25
+
+### Fixed
+- **DXT Pack Command**: Correct syntax for `dxt pack` command by removing invalid `--output` flag
+- **Release Workflow**: Fix "unknown option" error during DXT packaging step
+- **Command Usage**: Use proper syntax `dxt pack <source> <output_file>` instead of `--output` flag
+
 ## [2.0.3] - 2024-07-25
 
 ### Fixed
