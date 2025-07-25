@@ -75,7 +75,7 @@ jobs:
           fi
           
           # Create the DXT package from dxt-build directory
-          dxt pack dxt-build --output apple-notes-dxt-${TAG_NAME}.dxt
+          dxt pack dxt-build apple-notes-dxt-${TAG_NAME}.dxt
           
           # Verify the package was created
           test -f apple-notes-dxt-${TAG_NAME}.dxt || { echo "❌ DXT package creation failed"; exit 1; }
