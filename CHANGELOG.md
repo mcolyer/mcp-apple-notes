@@ -7,29 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Desktop Extension (DXT) support for single-click installation
-- Enhanced security validation with input sanitization and length limits
-- Structured JSON logging for monitoring and debugging
-- Comprehensive timeout management (30-second default for DXT)
-- Process-level exception handling with graceful failures
-- GitHub Actions workflows for automated releases and testing
-- Production-ready server bundle with enhanced error handling
-- User configuration support for iCloud account selection
-- Automated DXT packaging and validation pipeline
+## [2.0.0] - 2024-07-25
 
-### Enhanced
-- AppleScript injection prevention through comprehensive input validation
-- Error handling with user-friendly messages and structured logging
-- Build process with automated dependency bundling
-- Documentation with installation guides and developer workflows
+### 🚀 MAJOR RELEASE: Desktop Extension (DXT) Support
 
-### Security
-- Null character filtering to prevent script injection
-- Quote escaping for safe AppleScript execution
-- Input length validation (titles: 1000 chars, content: 50000 chars)
-- Tag limits (maximum 20 tags, 100 chars each)
-- Operation timeouts to prevent hanging processes
+This is a major release that introduces Desktop Extension (DXT) support alongside the existing traditional MCP server, enabling single-click installation and production-ready deployment.
+
+#### ⚠️ Breaking Changes
+- **Dual Distribution Model**: Project now supports both traditional MCP server and DXT extension deployment
+- **Enhanced Security Requirements**: DXT version includes stricter input validation and length limits
+- **Updated Installation Process**: DXT is now the recommended installation method
+
+#### 🎯 New Features
+- **Desktop Extension (DXT) Support**: Complete DXT v0.1 specification compliance for single-click installation
+- **Production Security Layer**: Enhanced input sanitization, length validation, and AppleScript injection prevention
+- **Structured JSON Logging**: Comprehensive logging system for monitoring and debugging
+- **Automated Release Pipeline**: GitHub Actions workflows for automated DXT packaging and releases
+- **Enhanced Error Handling**: Process-level exception handling with graceful failures and user-friendly messages
+- **Comprehensive Testing Suite**: 61 tests with 100% line coverage using Vitest framework
+- **User Configuration**: Support for custom iCloud account selection
+- **Build Automation**: Complete DXT packaging and validation pipeline
+
+#### 🔒 Security Enhancements
+- **Input Validation**: Configurable limits (titles: 1000 chars, content: 50000 chars, tags: 20 max)
+- **Script Injection Prevention**: Comprehensive AppleScript input sanitization and quote escaping
+- **Timeout Management**: 30-second operation timeouts to prevent hanging processes
+- **Null Character Filtering**: Protection against control character injection attacks
+
+#### 📚 Documentation & Development
+- **Comprehensive Documentation**: DXT_README.md, RELEASE.md, and updated developer guides
+- **Developer Workflows**: Complete CI/CD pipeline with automated testing and validation
+- **Migration Guide**: Clear instructions for both DXT and traditional MCP server deployment
+
+#### 🔄 Migration Notes
+- **Existing Users**: Traditional MCP server configuration remains fully supported with no breaking changes
+- **New Users**: DXT extension is now the recommended installation method
+- **Developers**: New build processes and testing framework for contributors
 
 ## [1.0.0] - 2024-01-XX
 
