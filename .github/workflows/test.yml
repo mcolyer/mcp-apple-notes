@@ -88,10 +88,8 @@ jobs:
           if test -f manifest.json; then
             echo "Testing DXT build process..."
             
-            # Create server directory
-            mkdir -p server
-            cp -r build/* server/
-            cp -r node_modules server/
+            # Use the actual build:dxt script to create proper server structure
+            pnpm run build:dxt
             
             # Validate DXT structure
             test -f server/index.js || { echo "❌ server/index.js missing"; exit 1; }
