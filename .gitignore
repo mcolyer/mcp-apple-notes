@@ -9,6 +9,7 @@ server/
 *.dxt
 dist/
 temp/
+dxt-build/
 
 # IDE files
 .vscode/
