@@ -43,28 +43,22 @@ jobs:
           pnpm run check
           echo "✅ Linting and formatting validated"
       
-      - name: Build TypeScript
-        run: pnpm exec tsc
-      
-      - name: Create DXT server directory
-        run: |
-          mkdir -p server
-          cp -r build/* server/
-          cp -r node_modules server/
+      - name: Build DXT extension
+        run: pnpm run build:dxt
       
       - name: Validate DXT structure
         run: |
-          # Check required files exist
+          # Check required files exist (in dxt-build directory)
           test -f manifest.json || { echo "❌ manifest.json missing"; exit 1; }
-          test -f server/index.js || { echo "❌ server/index.js missing"; exit 1; }
-          test -f server/package.json || { echo "❌ server/package.json missing"; exit 1; }
-          test -d server/node_modules/@modelcontextprotocol || { echo "❌ MCP SDK missing"; exit 1; }
+          test -f dxt-build/server/index.js || { echo "❌ dxt-build/server/index.js missing"; exit 1; }
+          test -f dxt-build/server/package.json || { echo "❌ dxt-build/server/package.json missing"; exit 1; }
+          test -d dxt-build/server/node_modules/@modelcontextprotocol || { echo "❌ MCP SDK missing"; exit 1; }
           
           # Validate manifest JSON
           node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8'))" || { echo "❌ Invalid manifest.json"; exit 1; }
           
           # Test server can load
-          cd server && timeout 10s node -e "console.log('✅ Server validation passed')" || { echo "❌ Server validation failed"; exit 1; }
+          cd dxt-build/server && timeout 10s node -e "console.log('✅ Server validation passed')" || { echo "❌ Server validation failed"; exit 1; }
           
           echo "✅ DXT structure validation completed"
       
@@ -80,8 +74,8 @@ jobs:
             TAG_NAME=${GITHUB_REF_NAME}
           fi
           
-          # Create the DXT package
-          dxt pack . --output apple-notes-dxt-${TAG_NAME}.dxt
+          # Create the DXT package from dxt-build directory
+          dxt pack dxt-build --output apple-notes-dxt-${TAG_NAME}.dxt
           
           # Verify the package was created
           test -f apple-notes-dxt-${TAG_NAME}.dxt || { echo "❌ DXT package creation failed"; exit 1; }
@@ -182,8 +176,7 @@ jobs:
           path: |
             apple-notes-dxt-${{ env.TAG_NAME }}.dxt
             manifest.json
-            server/
-            build/
+            dxt-build/
           retention-days: 30
       
       - name: Release summary
