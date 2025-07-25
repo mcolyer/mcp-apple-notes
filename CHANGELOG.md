@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2024-07-25
+
+### Fixed
+- **Release Workflow**: Fixed GitHub Actions release workflow to use proper build:dxt script and correct file paths
+- **DXT Packaging**: Updated workflow to package from dxt-build directory instead of root
+- **Validation Paths**: Corrected file path validation to check dxt-build/server/ structure
+
 ## [2.0.0] - 2024-07-25
 
 ### 🚀 MAJOR RELEASE: Desktop Extension (DXT) Support
