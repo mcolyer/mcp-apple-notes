@@ -1,5 +1,5 @@
-import type { Note } from '@/types.js';
-import { runAppleScript } from '@/utils/applescript.js';
+import type { Note } from "@/types.js";
+import { runAppleScript } from "@/utils/applescript.js";
 
 /**
  * Formats note content for AppleScript compatibility
@@ -7,17 +7,17 @@ import { runAppleScript } from '@/utils/applescript.js';
  * @returns Formatted content with proper line breaks
  */
 const formatContent = (content: string): string => {
-  if (!content) return '';
+  if (!content) return "";
 
   // Define replacement patterns for text formatting
   const replacements: [string, RegExp][] = [
-    ['\n', /\n/g],
-    ['\t', /\t/g],
+    ["\n", /\n/g],
+    ["\t", /\t/g],
     ['"', /"/g], // Escape quotes for AppleScript
   ];
 
   return replacements.reduce(
-    (text, [char, pattern]) => text.replace(pattern, char === '"' ? '\\"' : '<br>'),
+    (text, [char, pattern]) => text.replace(pattern, char === '"' ? '\\"' : "<br>"),
     content
   );
 };
@@ -44,7 +44,7 @@ export class AppleNotesManager {
 
     const result = runAppleScript(script);
     if (!result.success) {
-      console.error('Failed to create note:', result.error);
+      console.error("Failed to create note:", result.error);
       return null;
     }
 
@@ -54,7 +54,7 @@ export class AppleNotesManager {
       content,
       tags,
       created: new Date(),
-      modified: new Date()
+      modified: new Date(),
     };
   }
 
@@ -75,20 +75,20 @@ export class AppleNotesManager {
 
     const result = runAppleScript(script);
     if (!result.success) {
-      console.error('Failed to search notes:', result.error);
+      console.error("Failed to search notes:", result.error);
       return [];
     }
 
     return result.output
-      .split(',')
+      .split(",")
       .filter(Boolean)
-      .map(title => ({
+      .map((title) => ({
         id: Date.now().toString(),
         title: title.trim(),
-        content: '',
+        content: "",
         tags: [],
         created: new Date(),
-        modified: new Date()
+        modified: new Date(),
       }));
   }
 
@@ -109,8 +109,8 @@ export class AppleNotesManager {
 
     const result = runAppleScript(script);
     if (!result.success) {
-      console.error('Failed to get note content:', result.error);
-      return '';
+      console.error("Failed to get note content:", result.error);
+      return "";
     }
 
     return result.output;

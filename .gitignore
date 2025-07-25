@@ -1,3 +1,36 @@
 node_modules/
 build/
 .DS_Store
+
+# DXT server directory (build artifacts and bundled dependencies)
+server/
+
+# DXT build artifacts
+*.dxt
+dist/
+temp/
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Temporary folders
+tmp/
+temp/

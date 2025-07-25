@@ -1,0 +1,93 @@
+{
+  "dxt_version": "0.1",
+  "name": "apple-notes",
+  "display_name": "Apple Notes MCP Server",
+  "version": "1.0.0",
+  "description": "A DXT extension for interacting with Apple Notes through MCP. Create, search, and retrieve notes effortlessly using AI assistants.",
+  "long_description": "The Apple Notes MCP Server enables seamless interaction with Apple Notes through the Model Context Protocol. This extension provides three core tools: create new notes with titles and content, search existing notes by title, and retrieve the full content of specific notes. Perfect for note-taking during meetings, brainstorming sessions, and organizing information directly from your AI assistant. Requires macOS with Apple Notes configured and iCloud integration.",
+  "author": {
+    "name": "MCP Apple Notes Contributors",
+    "email": "support@example.com",
+    "url": "https://github.com/mcolyer/mcp-apple-notes"
+  },
+  "license": "MIT",
+  "keywords": ["apple-notes", "notes", "productivity", "macos", "mcp", "claude"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"]
+    }
+  },
+  "tools": [
+    {
+      "name": "create-note",
+      "description": "Creates a new note in Apple Notes with the specified title and content",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the note"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the note"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional array of tags for the note"
+          }
+        },
+        "required": ["title", "content"]
+      }
+    },
+    {
+      "name": "search-notes",
+      "description": "Search for notes by title using a query string",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query to find notes by title"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "get-note-content",
+      "description": "Retrieve the full content of a specific note by its exact title",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The exact title of the note to retrieve"
+          }
+        },
+        "required": ["title"]
+      }
+    }
+  ],
+  "compatibility": {
+    "platforms": ["darwin"],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  },
+  "user_config": {
+    "icloud_account": {
+      "type": "string",
+      "title": "iCloud Account Name",
+      "description": "Name of the iCloud account to use for Apple Notes (default: 'iCloud')",
+      "default": "iCloud",
+      "required": false
+    }
+  }
+}
