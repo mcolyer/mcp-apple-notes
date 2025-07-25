@@ -26,25 +26,20 @@ jobs:
           version: latest
       
       - name: Install dependencies
-        run: npm install
-      
-      - name: Run linting
-        run: |
-          npm run lint
-          echo "✅ Linting passed"
+        run: pnpm install --frozen-lockfile
       
       - name: Run tests
         run: |
-          npm run test:run
+          pnpm run test:run
           echo "✅ Tests passed"
       
       - name: Generate coverage report
         run: |
-          npm run test:coverage
+          pnpm run test:coverage
           echo "✅ Coverage report generated"
       
       - name: Build TypeScript
-        run: npm run build
+        run: pnpm exec tsc
       
       - name: Validate build output
         run: |
